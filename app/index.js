@@ -1,11 +1,17 @@
+/* eslint no-param-reassign: 0 */
 // @flow
 
 import {Component} from 'react';
 import LIVR from 'livr';
 import pick from 'lodash/pick';
 import omit from 'lodash/omit';
-import values from 'lodash/values';
+import assign from 'lodash/assign';
 import keys from 'lodash/keys';
+import equals from 'ramda/src/equals';
+import isEmpty from 'ramda/src/isEmpty';
+import partialRight from 'ramda/src/partialRight';
+import when from 'ramda/src/when';
+import pipe from 'ramda/src/pipe';
 import ContextTypes from './types/context-types';
 
 const HAS_ERRORS = 'HAS_ERRORS';
@@ -49,8 +55,29 @@ export default class Validation extends Component {
     }
 
     componentDidMount() {
-        this.validator = new LIVR.Validator(this.props.schema);
+        const {schema} = this.props;
+        this.createValidator(schema);
         this.initialValidate();
+    }
+
+    componentWillReceiveProps({schema: nextSchema, data: nextData}: Props) {
+        const {schema, data} = this.props;
+        const equalsSchema = equals(schema, nextSchema);
+        const equalsData = equals(data, nextData);
+        console.log(equalsSchema, equalsData);
+        if (!equalsSchema) {
+            this.createValidator(nextSchema);
+        }
+        if (!equalsData) {
+            this.data = nextData;
+        }
+        if (!equalsSchema || !equalsData) {
+            this.validateData(this.data, '');
+        }
+    }
+
+    createValidator(schema: Object) {
+        this.validator = new LIVR.Validator(schema);
     }
 
     validateData(data: Object, name: string) {
@@ -59,32 +86,31 @@ export default class Validation extends Component {
         validator.validate(data);
         const errors = validator.getErrors();
         const error = pick(errors, name);
-        let nextErrors;
 
-        if (values(error).length) {
-            nextErrors = {
-                ...stateErrors,
-                ...error
-            };
-        } else if (stateErrors[name]) {
-            nextErrors = {
-                ...omit(
-                    stateErrors,
-                    [name]
-                )
-            };
-        }
-        if (stateErrors[HAS_ERRORS] && !errors) {
-            nextErrors = {
-                ...omit(
-                    nextErrors,
-                    [HAS_ERRORS]
-                )
-            };
-        }
+        const partialOmit = fields => partialRight(omit, [fields]);
+        const partialAssign = obj => partialRight(assign, [obj]);
+        const getNextErrors = pipe(
+            when(
+                () => !isEmpty(error),
+                partialAssign(error)
+            ),
+            when(
+                () => stateErrors[name] && isEmpty(error),
+                partialOmit(name)
+            ),
+            when(
+                () => stateErrors[HAS_ERRORS] && !errors,
+                partialOmit(HAS_ERRORS)
+            ),
+            when(
+                () => !stateErrors[HAS_ERRORS] && errors,
+                partialAssign({HAS_ERRORS: 1})
+            )
+        );
+
         this.setState({
             errors: {
-                ...nextErrors
+                ...getNextErrors(stateErrors)
             }
         });
     }

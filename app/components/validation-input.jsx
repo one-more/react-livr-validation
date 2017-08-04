@@ -1,10 +1,17 @@
+/* eslint no-param-reassign: 0 */
+/* eslint react/sort-comp: 0 */
 // @flow
 
 import React, {Component} from 'react';
-import capitalize from 'lodash/capitalize';
 import noop from 'lodash/noop';
 import styled from 'styled-components';
 import compose from 'ramda/src/compose';
+import concat from 'ramda/src/concat';
+import partial from 'ramda/src/partial';
+import converge from 'ramda/src/converge';
+import head from 'ramda/src/head';
+import slice from 'ramda/src/slice';
+import toUpper from 'ramda/src/toUpper';
 import {normalizeOnChangeEvent} from 'utils';
 import ContextTypes from '../types/context-types';
 import ERROR_CODES from '../data/error-codes';
@@ -37,7 +44,8 @@ export default class ValidationInput extends Component {
 
     cloneElement() {
         const {validateOnEvents, children} = this.props;
-        const eventNames = validateOnEvents.map((event: string) => `on${capitalize(event)}`);
+        const capitalize = converge(concat, [compose(toUpper, head), slice(1, Infinity)]);
+        const eventNames = validateOnEvents.map(compose(partial(concat, ['on']), capitalize));
         const props = eventNames.reduce((acc: Object, event: string) => {
             const {props: childrenProps} = children;
             acc[event] = (e: Object) => {
