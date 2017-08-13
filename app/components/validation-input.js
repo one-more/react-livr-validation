@@ -1,5 +1,3 @@
-/* eslint no-param-reassign: 0 */
-/* eslint react/sort-comp: 0 */
 // @flow
 
 import React, {Component} from 'react';
@@ -12,9 +10,10 @@ import converge from 'ramda/src/converge';
 import head from 'ramda/src/head';
 import slice from 'ramda/src/slice';
 import toUpper from 'ramda/src/toUpper';
-import {normalizeOnChangeEvent} from 'utils';
+import when from 'ramda/src/when';
+import not from 'ramda/src/not';
+import propEq from 'ramda/src/propEq';
 import ContextTypes from '../types/context-types';
-import ERROR_CODES from '../data/error-codes';
 
 type Props = {
     name: string,
@@ -22,12 +21,14 @@ type Props = {
     children: any
 };
 
+const capitalize = converge(concat, [compose(toUpper, head), slice(1, Infinity)]);
+
 export default class ValidationInput extends Component {
     static contextTypes = ContextTypes;
 
     static defaultProps = {
         children: null,
-        validateOnEvents: [],
+        validateOnEvents: ['change', 'blur', 'keyUp'],
         name: ''
     };
 
@@ -38,13 +39,15 @@ export default class ValidationInput extends Component {
         setData({name, value});
     };
 
-    onEvent = compose(this.eventHandler, normalizeOnChangeEvent);
+    onEvent = when(
+        compose(not, propEq('key', 'Tab')),
+        this.eventHandler
+    );
 
     props: Props;
 
     cloneElement() {
         const {validateOnEvents, children} = this.props;
-        const capitalize = converge(concat, [compose(toUpper, head), slice(1, Infinity)]);
         const eventNames = validateOnEvents.map(compose(partial(concat, ['on']), capitalize));
         const props = eventNames.reduce((acc: Object, event: string) => {
             const {props: childrenProps} = children;
@@ -62,15 +65,18 @@ export default class ValidationInput extends Component {
 
     render() {
         const {name} = this.props;
-        const {getError} = this.context;
+        const {getError, className, style, errorCodes} = this.context;
         const error = getError(name);
         const element = this.cloneElement();
         return (
             <div>
                 {element}
                 {error &&
-                    <Error>
-                        {ERROR_CODES[error] || error}
+                    <Error
+                        className={className}
+                        style={style}
+                    >
+                        {errorCodes[error] || error}
                     </Error>
                 }
             </div>

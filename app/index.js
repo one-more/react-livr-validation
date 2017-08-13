@@ -1,147 +1,18 @@
-/* eslint no-param-reassign: 0 */
 // @flow
 
-import {Component} from 'react';
-import LIVR from 'livr';
-import pick from 'lodash/pick';
-import omit from 'lodash/omit';
-import assign from 'lodash/assign';
-import keys from 'lodash/keys';
-import equals from 'ramda/src/equals';
-import isEmpty from 'ramda/src/isEmpty';
-import partialRight from 'ramda/src/partialRight';
-import when from 'ramda/src/when';
-import pipe from 'ramda/src/pipe';
-import ContextTypes from './types/context-types';
+import React from 'react'
+import Validation from './validation'
+import ERROR_CODES from './data/error-codes'
 
-const HAS_ERRORS = 'HAS_ERRORS';
-
-type Props = {
-    data: Object,
-    schema: Object,
-    children?: any
-};
-
-type State = {
-    errors: Object
-};
-
-type DataChunk = {
-    name: string,
-    value: any
-};
-
-LIVR.Validator.defaultAutoTrim(true);
-
-export default class Validation extends Component {
-    static childContextTypes = ContextTypes;
-
-    state: State = {
-        errors: {}
-    };
-
-    getChildContext() {
-        return {
-            setData: ({name, value}: DataChunk) => {
-                const {data} = this;
-                data[name] = value;
-                this.validateData(data, name);
-            },
-
-            getError: (name: string) => this.state.errors[name],
-
-            getErrors: () => this.state.errors
-        };
-    }
-
-    componentDidMount() {
-        const {schema} = this.props;
-        this.createValidator(schema);
-        this.initialValidate();
-    }
-
-    componentWillReceiveProps({schema: nextSchema, data: nextData}: Props) {
-        const {schema, data} = this.props;
-        const equalsSchema = equals(schema, nextSchema);
-        const equalsData = equals(data, nextData);
-        console.log(equalsSchema, equalsData);
-        if (!equalsSchema) {
-            this.createValidator(nextSchema);
-        }
-        if (!equalsData) {
-            this.data = nextData;
-        }
-        if (!equalsSchema || !equalsData) {
-            this.validateData(this.data, '');
-        }
-    }
-
-    createValidator(schema: Object) {
-        this.validator = new LIVR.Validator(schema);
-    }
-
-    validateData(data: Object, name: string) {
-        const {errors: stateErrors} = this.state;
-        const {validator} = this;
-        validator.validate(data);
-        const errors = validator.getErrors();
-        const error = pick(errors, name);
-
-        const partialOmit = fields => partialRight(omit, [fields]);
-        const partialAssign = obj => partialRight(assign, [obj]);
-        const getNextErrors = pipe(
-            when(
-                () => !isEmpty(error),
-                partialAssign(error)
-            ),
-            when(
-                () => stateErrors[name] && isEmpty(error),
-                partialOmit(name)
-            ),
-            when(
-                () => stateErrors[HAS_ERRORS] && !errors,
-                partialOmit(HAS_ERRORS)
-            ),
-            when(
-                () => !stateErrors[HAS_ERRORS] && errors,
-                partialAssign({HAS_ERRORS: 1})
-            )
-        );
-
-        this.setState({
-            errors: {
-                ...getNextErrors(stateErrors)
-            }
-        });
-    }
-
-    initialValidate() {
-        const {validator} = this;
-        const {data, schema} = this.props;
-        const validationData = keys(schema).reduce((acc: Object, key: string) => {
-            acc[key] = data[key];
-            return acc;
-        }, {});
-        validator.validate(validationData);
-        const errors = validator.getErrors();
-        if (errors) {
-            this.setState({
-                errors: {
-                    [HAS_ERRORS]: 1
-                }
-            });
-        }
-    }
-
-    validator: Object;
-
-    props: Props;
-
-    data = this.props.data;
-
-    render() {
-        return this.props.children;
-    }
+export default function HOC({children, errorCodes, ...rest}) {
+    return (
+        <Validation
+            {...rest}
+            errorCodes={errorCodes || ERROR_CODES}
+        >
+            {children}
+        </Validation>
+    )
 }
 
 export {default as ValidationInput} from './components/validation-input';

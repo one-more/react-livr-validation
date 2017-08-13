@@ -4,7 +4,10 @@
   "description": "react validation component with LIVR as validation engine",
   "main": "app/index.js",
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "deploy-storybook": "storybook-to-ghpages"
   },
   "repository": {
     "type": "git",
@@ -30,6 +33,10 @@
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",
-    "react": "^15.6.1"
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.52.0"
   }
 }
