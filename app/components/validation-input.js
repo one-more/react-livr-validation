@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import noop from 'lodash/noop';
 import styled from 'styled-components';
 import compose from 'ramda/src/compose';
@@ -21,7 +21,10 @@ type Props = {
     children: any
 };
 
-const capitalize = converge(concat, [compose(toUpper, head), slice(1, Infinity)]);
+const capitalize = converge(concat, [
+    compose(toUpper, head),
+    slice(1, Infinity)
+]);
 
 export default class ValidationInput extends Component {
     static contextTypes = ContextTypes;
@@ -33,52 +36,44 @@ export default class ValidationInput extends Component {
     };
 
     eventHandler = (e: Object) => {
-        const {target: {value}} = e;
-        const {setData} = this.context;
-        const {name} = this.props;
-        setData({name, value});
+        const { target: { value } } = e;
+        const { setData } = this.context;
+        const { name } = this.props;
+        setData({ name, value });
     };
 
-    onEvent = when(
-        compose(not, propEq('key', 'Tab')),
-        this.eventHandler
-    );
+    onEvent = when(compose(not, propEq('key', 'Tab')), this.eventHandler);
 
     props: Props;
 
     cloneElement() {
-        const {validateOnEvents, children} = this.props;
-        const eventNames = validateOnEvents.map(compose(partial(concat, ['on']), capitalize));
+        const { validateOnEvents, children } = this.props;
+        const eventNames = validateOnEvents.map(
+            compose(partial(concat, ['on']), capitalize)
+        );
         const props = eventNames.reduce((acc: Object, event: string) => {
-            const {props: childrenProps} = children;
+            const { props: childrenProps } = children;
             acc[event] = (e: Object) => {
                 (childrenProps[event] || noop)(e);
                 this.onEvent(e);
             };
             return acc;
         }, {});
-        return React.cloneElement(
-            children,
-            props
-        );
+        return React.cloneElement(children, props);
     }
 
     render() {
-        const {name} = this.props;
-        const {getError, className, style, errorCodes} = this.context;
+        const { name } = this.props;
+        const { getError, className, style, errorCodes } = this.context;
         const error = getError(name);
         const element = this.cloneElement();
         return (
             <div>
                 {element}
                 {error &&
-                    <Error
-                        className={className}
-                        style={style}
-                    >
+                    <Error className={className} style={style}>
                         {errorCodes[error] || error}
-                    </Error>
-                }
+                    </Error>}
             </div>
         );
     }

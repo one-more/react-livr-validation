@@ -1,17 +1,17 @@
 // @flow
 
-import {Component} from 'react'
-import LIVR from 'livr'
-import pick from 'lodash/pick'
-import omit from 'lodash/omit'
-import assign from 'lodash/assign'
-import keys from 'lodash/keys'
-import equals from 'ramda/src/equals'
-import isEmpty from 'ramda/src/isEmpty'
-import partialRight from 'ramda/src/partialRight'
-import when from 'ramda/src/when'
-import pipe from 'ramda/src/pipe'
-import ContextTypes from './types/context-types'
+import { Component } from 'react';
+import LIVR from 'livr';
+import pick from 'lodash/pick';
+import omit from 'lodash/omit';
+import assign from 'lodash/assign';
+import keys from 'lodash/keys';
+import equals from 'ramda/src/equals';
+import isEmpty from 'ramda/src/isEmpty';
+import partialRight from 'ramda/src/partialRight';
+import when from 'ramda/src/when';
+import pipe from 'ramda/src/pipe';
+import ContextTypes from './types/context-types';
 
 const HAS_ERRORS = 'HAS_ERRORS';
 
@@ -24,8 +24,8 @@ type AliasedRule = {
 type Props = {
     data: Object,
     schema: Object,
-    rules?: Object,
-    aliasedRules?: Array<AliasedRule>,
+    rules: Object,
+    aliasedRules: Array<AliasedRule>,
     className: string,
     style: Object,
     errorCodes: Object,
@@ -51,7 +51,9 @@ export default class Validation extends Component {
         aliasedRules: [],
         className: '',
         style: {},
-        errorCodes: {}
+        errorCodes: {},
+        data: {},
+        schema: {}
     };
 
     state: State = {
@@ -60,8 +62,8 @@ export default class Validation extends Component {
 
     getChildContext() {
         return {
-            setData: ({name, value}: DataChunk) => {
-                const {data} = this;
+            setData: ({ name, value }: DataChunk) => {
+                const { data } = this;
                 data[name] = value;
                 this.validateData(data, name);
             },
@@ -79,13 +81,13 @@ export default class Validation extends Component {
     }
 
     componentDidMount() {
-        const {schema} = this.props;
+        const { schema } = this.props;
         this.createValidator(schema);
         this.initialValidate();
     }
 
-    componentWillReceiveProps({schema: nextSchema, data: nextData}: Props) {
-        const {schema, data} = this.props;
+    componentWillReceiveProps({ schema: nextSchema, data: nextData }: Props) {
+        const { schema, data } = this.props;
         const equalsSchema = equals(schema, nextSchema);
         const equalsData = equals(data, nextData);
         if (!equalsSchema) {
@@ -100,17 +102,17 @@ export default class Validation extends Component {
     }
 
     createValidator(schema: Object) {
-        const {rules, aliasedRules} = this.props;
+        const { rules, aliasedRules } = this.props;
         this.validator = new LIVR.Validator(schema);
         this.validator.registerRules(rules);
         aliasedRules.forEach((rule: AliasedRule) => {
-            this.validator.registerAliasedRule(rule)
-        })
+            this.validator.registerAliasedRule(rule);
+        });
     }
 
     validateData(data: Object, name: string) {
-        const {errors: stateErrors} = this.state;
-        const {validator} = this;
+        const { errors: stateErrors } = this.state;
+        const { validator } = this;
         validator.validate(data);
         const errors = validator.getErrors();
         const error = pick(errors, name);
@@ -118,21 +120,15 @@ export default class Validation extends Component {
         const partialOmit = fields => partialRight(omit, [fields]);
         const partialAssign = obj => partialRight(assign, [obj]);
         const getNextErrors = pipe(
-            when(
-                () => !isEmpty(error),
-                partialAssign(error)
-            ),
-            when(
-                () => stateErrors[name] && isEmpty(error),
-                partialOmit(name)
-            ),
+            when(() => !isEmpty(error), partialAssign(error)),
+            when(() => stateErrors[name] && isEmpty(error), partialOmit(name)),
             when(
                 () => stateErrors[HAS_ERRORS] && !errors,
                 partialOmit(HAS_ERRORS)
             ),
             when(
                 () => !stateErrors[HAS_ERRORS] && errors,
-                partialAssign({HAS_ERRORS: 1})
+                partialAssign({ HAS_ERRORS: 1 })
             )
         );
 
@@ -144,9 +140,11 @@ export default class Validation extends Component {
     }
 
     initialValidate() {
-        const {validator} = this;
-        const {data, schema} = this.props;
-        const validationData = keys(schema).reduce((acc: Object, key: string) => {
+        const { validator } = this;
+        const { data, schema } = this.props;
+        const validationData = keys(
+            schema
+        ).reduce((acc: Object, key: string) => {
             acc[key] = data[key];
             return acc;
         }, {});

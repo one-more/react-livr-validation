@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import values from 'lodash/values';
 import ContextTypes from '../types/context-types';
 
@@ -18,13 +18,10 @@ export default class DisabledOnErrors extends Component {
     props: Props;
 
     render() {
-        const {children} = this.props;
+        const { children } = this.props;
         const errors = this.context.getErrors();
-        return React.cloneElement(
-            children,
-            {
-                disabled: Boolean(values(errors).length)
-            }
-        );
+        return React.cloneElement(children, {
+            disabled: Boolean(values(errors).length)
+        });
     }
 }

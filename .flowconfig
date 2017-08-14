@@ -1,0 +1,13 @@
+[options]
+esproposal.decorators=ignore
+unsafe.enable_getters_and_setters=true
+
+module.system.node.resolve_dirname=app
+module.system.node.resolve_dirname=node_modules
+
+module.ignore_non_literal_requires=true
+
+suppress_comment=\\(.\\|\n\\)*\\$FlowIgnore
+
+[ignore]
+.*/styled-components/src/.*

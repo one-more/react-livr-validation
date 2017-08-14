@@ -1,19 +1,21 @@
 // @flow
 
-import React from 'react'
-import Validation from './validation'
-import ERROR_CODES from './data/error-codes'
+import React from 'react';
+import Validation from './validation';
+import ERROR_CODES from './data/error-codes';
 
-export default function HOC({children, errorCodes, ...rest}) {
+type Props = {
+    children: any,
+    errorCodes?: Object
+};
+
+export default function HOC({ children, errorCodes, ...rest }: Props) {
     return (
-        <Validation
-            {...rest}
-            errorCodes={errorCodes || ERROR_CODES}
-        >
+        <Validation {...rest} errorCodes={errorCodes || ERROR_CODES}>
             {children}
         </Validation>
-    )
+    );
 }
 
-export {default as ValidationInput} from './components/validation-input';
-export {default as DisabledOnErrors} from './components/disabled-on-errors';
+export { default as ValidationInput } from './components/validation-input';
+export { default as DisabledOnErrors } from './components/disabled-on-errors';
