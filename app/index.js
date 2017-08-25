@@ -19,3 +19,6 @@ export default function HOC({ children, errorCodes, ...rest }: Props) {
 
 export { default as ValidationInput } from './components/validation-input';
 export { default as DisabledOnErrors } from './components/disabled-on-errors';
+export {
+    default as ValidationComponent
+} from './components/validation-component';

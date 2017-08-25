@@ -13,12 +13,17 @@ import toUpper from 'ramda/src/toUpper';
 import when from 'ramda/src/when';
 import not from 'ramda/src/not';
 import propEq from 'ramda/src/propEq';
-import ContextTypes from '../types/context-types';
+import HOC from './validation-component';
 
 type Props = {
     name: string,
     validateOnEvents: Array<string>,
-    children: any
+    children: any,
+    setData: Function,
+    getError: Function,
+    className: string,
+    style: Object,
+    errorCodes: Object
 };
 
 const capitalize = converge(concat, [
@@ -26,9 +31,7 @@ const capitalize = converge(concat, [
     slice(1, Infinity)
 ]);
 
-export default class ValidationInput extends Component {
-    static contextTypes = ContextTypes;
-
+class ValidationInput extends Component {
     static defaultProps = {
         children: null,
         validateOnEvents: ['change', 'blur', 'keyUp'],
@@ -37,8 +40,7 @@ export default class ValidationInput extends Component {
 
     eventHandler = (e: Object) => {
         const { target: { value } } = e;
-        const { setData } = this.context;
-        const { name } = this.props;
+        const { name, setData } = this.props;
         setData({ name, value });
     };
 
@@ -63,8 +65,7 @@ export default class ValidationInput extends Component {
     }
 
     render() {
-        const { name } = this.props;
-        const { getError, className, style, errorCodes } = this.context;
+        const { name, getError, className, style, errorCodes } = this.props;
         const error = getError(name);
         const element = this.cloneElement();
         return (
@@ -83,3 +84,5 @@ const Error = styled.div`
     color: red;
     padding-top: 4px;
 `;
+
+export default HOC(ValidationInput);

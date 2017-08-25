@@ -2,15 +2,14 @@
 
 import React, { Component } from 'react';
 import values from 'lodash/values';
-import ContextTypes from '../types/context-types';
+import HOC from './validation-component';
 
 type Props = {
-    children: any
+    children: any,
+    getErrors: Function
 };
 
-export default class DisabledOnErrors extends Component {
-    static contextTypes = ContextTypes;
-
+class DisabledOnErrors extends Component {
     static defaultProps = {
         children: null
     };
@@ -18,10 +17,11 @@ export default class DisabledOnErrors extends Component {
     props: Props;
 
     render() {
-        const { children } = this.props;
-        const errors = this.context.getErrors();
+        const { children, getErrors } = this.props;
+        const errors = getErrors();
         return React.cloneElement(children, {
             disabled: Boolean(values(errors).length)
         });
     }
 }
+export default HOC(DisabledOnErrors);
