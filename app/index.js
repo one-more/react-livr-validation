@@ -22,3 +22,4 @@ export { default as DisabledOnErrors } from './components/disabled-on-errors';
 export {
     default as ValidationComponent
 } from './components/validation-component';
+export { RU as RU_ERROR_CODES } from './data/error-codes';

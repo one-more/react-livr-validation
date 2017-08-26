@@ -23,14 +23,14 @@ export default function() {
             schema={schema}
         >
             <form>
-                <ValidationComponent name="login" >
+                <ValidationInput name="login" >
                     <input name="login" />
-                </ValidationComponent>
-                <ValidationComponent name="password" >
+                </ValidationInput>
+                <ValidationInput name="password" >
                     <input name="password" type="password" />
-                </ValidationComponent>
+                </ValidationInput>
                 <DisabledOnErrors>
-                    <Input type="submit" />
+                    <input type="submit" />
                 </DisabledOnErrors>
             </form>
         </Validation>
@@ -114,6 +114,12 @@ export default function() {
         </Validation>
     );   
 }
+````
+
+### russian dictionary
+default locale is english but you can import russian dictionary from package
+```` es6
+import {RU_ERROR_CODES} from 'react-livr-validation'
 ````
 
 ### write your own validation component
