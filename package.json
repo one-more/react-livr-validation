@@ -2,7 +2,7 @@
   "name": "react-livr-validation",
   "version": "1.0.0",
   "description": "react validation component with LIVR as validation engine",
-  "main": "app/index.js",
+  "main": "dist/bundle.js",
   "scripts": {
     "test": "jest --coverage",
     "storybook": "start-storybook -p 6006",
@@ -10,7 +10,9 @@
     "deploy-storybook": "storybook-to-ghpages",
     "lint": "eslint \"app/**/*.js\" \"ru/**/*.js\" --fix",
     "flow": "flow",
-      "git-add": "git add -u"
+    "git-add": "git add -u",
+    "build": "cross-env NODE_ENV=production webpack --progress",
+    "build-prod": "cross-env NODE_ENV=production webpack -p"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,7 @@
       "test",
       "flow",
       "lint",
+      "build-prod",
       "git-add"
     ]
   },
@@ -52,6 +55,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "cross-env": "^5.0.5",
     "enzyme": "^2.9.1",
     "eslint": "^4.4.1",
     "eslint-config-last": "0.0.3",

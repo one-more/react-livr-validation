@@ -24,10 +24,10 @@ export default function() {
         >
             <form>
                 <ValidationComponent name="login" >
-                    <input name="login" >
+                    <input name="login" />
                 </ValidationComponent>
                 <ValidationComponent name="password" >
-                    <input name="password" type="password" >
+                    <input name="password" type="password" />
                 </ValidationComponent>
                 <DisabledOnErrors>
                     <Input type="submit" />
