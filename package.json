@@ -1,6 +1,6 @@
 {
   "name": "react-livr-validation",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "react validation component with LIVR as validation engine",
   "main": "dist/bundle.js",
   "scripts": {
