@@ -1,5 +1,7 @@
 # React validation component
 
+[live demo](https://one-more.github.io/react-livr-validation/) 
+
 ### usage
 
 ```` es6
