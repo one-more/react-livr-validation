@@ -81,13 +81,17 @@ describe('Validation', () => {
                 value: ''
             }
         });
-        expect(wrapper.find(ValidationInput).at(0).find('div')).toHaveLength(2);
+        expect(
+            wrapper.find(ValidationInput).at(0).find('[data-error-block]')
+        ).toHaveLength(1);
         wrapper.find(`input[name="${LOGIN}"]`).simulate('change', {
             target: {
                 value: ''
             }
         });
-        expect(wrapper.find(ValidationInput).at(1).find('div')).toHaveLength(2);
+        expect(
+            wrapper.find(ValidationInput).at(1).find('[data-error-block]')
+        ).toHaveLength(1);
         expect(wrapper.find('button').props().disabled).toBeTruthy();
 
         wrapper.find(`input[name="${PASSWORD}"]`).simulate('change', {

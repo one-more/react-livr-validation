@@ -1,6 +1,6 @@
 {
   "name": "react-livr-validation",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "react validation component with LIVR as validation engine",
   "main": "dist/bundle.js",
   "scripts": {
@@ -43,8 +43,7 @@
   "dependencies": {
     "livr": "^2.0.0",
     "lodash": "^4.17.4",
-    "ramda": "^0.24.1",
-    "styled-components": "^2.1.1"
+    "ramda": "^0.24.1"
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",
@@ -69,7 +68,8 @@
     "pre-commit": "^1.2.2",
     "prettier": "^1.5.3",
     "react-dom": "^15.6.1",
-    "react-test-renderer": "^15.6.1"
+    "react-test-renderer": "^15.6.1",
+      "styled-components": "^2.1.1"
   },
   "jest": {
     "modulePaths": [

@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react';
 import noop from 'lodash/noop';
-import styled from 'styled-components';
 import compose from 'ramda/src/compose';
 import concat from 'ramda/src/concat';
 import partial from 'ramda/src/partial';
@@ -72,17 +71,20 @@ class ValidationInput extends Component {
             <div>
                 {element}
                 {error &&
-                    <Error className={className} style={style}>
-                        {errorCodes[error] || error}
-                    </Error>}
+                    <div
+                        style={{
+                            color: 'red',
+                            paddingTop: '4px'
+                        }}
+                        data-error-block
+                    >
+                        <div className={className} style={style}>
+                            {errorCodes[error] || error}
+                        </div>
+                    </div>}
             </div>
         );
     }
 }
-
-const Error = styled.div`
-    color: red;
-    padding-top: 4px;
-`;
 
 export default HOC(ValidationInput);
