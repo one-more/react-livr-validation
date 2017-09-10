@@ -1,5 +1,10 @@
 # React validation component
 
+### installation
+````
+npm i -S react-livr-validation
+````
+
 [live demo](https://one-more.github.io/react-livr-validation/) 
 
 ### usage
