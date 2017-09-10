@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import noop from 'lodash/noop';
+import noop from 'ramda/src/identity';
 import compose from 'ramda/src/compose';
 import concat from 'ramda/src/concat';
 import partial from 'ramda/src/partial';

@@ -2,13 +2,17 @@
 
 import { Component } from 'react';
 import LIVR from 'livr';
-import pick from 'lodash/pick';
-import omit from 'lodash/omit';
-import assign from 'lodash/assign';
-import keys from 'lodash/keys';
+import pick from 'ramda/src/pick';
+import omit from 'ramda/src/omit';
+import merge from 'ramda/src/merge';
+import __ from 'ramda/src/__';
+import keys from 'ramda/src/keys';
+import compose from 'ramda/src/compose';
+import prop from 'ramda/src/prop';
+import and from 'ramda/src/and';
+import not from 'ramda/src/not';
 import equals from 'ramda/src/equals';
 import isEmpty from 'ramda/src/isEmpty';
-import partialRight from 'ramda/src/partialRight';
 import when from 'ramda/src/when';
 import pipe from 'ramda/src/pipe';
 import ContextTypes from './types/context-types';
@@ -110,31 +114,29 @@ export default class Validation extends Component {
         });
     }
 
-    validateData(data: Object, name: string) {
+    getNextErrors = (name: string, error: Object, errors: Object) => {
         const { errors: stateErrors } = this.state;
-        const { validator } = this;
-        validator.validate(data);
-        const errors = validator.getErrors();
-        const error = pick(errors, name);
-
-        const partialOmit = fields => partialRight(omit, [fields]);
-        const partialAssign = obj => partialRight(assign, [obj]);
-        const getNextErrors = pipe(
-            when(() => !isEmpty(error), partialAssign(error)),
-            when(() => stateErrors[name] && isEmpty(error), partialOmit(name)),
+        const nextErrorsPipe = pipe(
+            when(() => !isEmpty(error), merge(__, error)),
+            when(compose(and(isEmpty(error)), prop(name)), omit([name])),
+            when(compose(and(!errors), prop(HAS_ERRORS)), omit([HAS_ERRORS])),
             when(
-                () => stateErrors[HAS_ERRORS] && !errors,
-                partialOmit(HAS_ERRORS)
-            ),
-            when(
-                () => !stateErrors[HAS_ERRORS] && errors,
-                partialAssign({ HAS_ERRORS: 1 })
+                compose(and(errors), not, prop(HAS_ERRORS)),
+                merge(__, { [HAS_ERRORS]: 1 })
             )
         );
+        return nextErrorsPipe(stateErrors);
+    };
+
+    validateData(data: Object, name: string) {
+        const { validator, getNextErrors } = this;
+        validator.validate(data);
+        const errors = validator.getErrors();
+        const error = pick([name], errors || {});
 
         this.setState({
             errors: {
-                ...getNextErrors(stateErrors)
+                ...getNextErrors(name, error, errors)
             }
         });
     }

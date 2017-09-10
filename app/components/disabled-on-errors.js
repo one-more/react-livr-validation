@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import values from 'lodash/values';
+import values from 'ramda/src/values';
 import HOC from './validation-component';
 
 type Props = {
