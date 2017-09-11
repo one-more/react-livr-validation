@@ -1,6 +1,6 @@
 {
   "name": "react-livr-validation",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "react validation component with LIVR as validation engine",
   "main": "dist/bundle.js",
   "scripts": {
@@ -49,10 +49,13 @@
     "react": "^15.6.1"
   },
   "devDependencies": {
+    "@storybook/react": "^3.2.8",
     "babel-eslint": "^7.2.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "cross-env": "^5.0.5",
     "enzyme": "^2.9.1",
     "eslint": "^4.4.1",

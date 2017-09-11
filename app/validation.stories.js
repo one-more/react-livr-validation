@@ -39,21 +39,17 @@ const aliasedRules = [
 ];
 
 storiesOf('Validation', module)
-    .add('default', () =>
+    .add('default', () => (
         <Validation schema={schema} data={{}}>
             <form>
                 <Row>
-                    <Label htmlFor={LOGIN}>
-                        {LOGIN}
-                    </Label>
+                    <Label htmlFor={LOGIN}>{LOGIN}</Label>
                     <ValidationInput name={LOGIN}>
                         <Input id={LOGIN} type="text" name={LOGIN} />
                     </ValidationInput>
                 </Row>
                 <Row>
-                    <Label htmlFor={PASSWORD}>
-                        {PASSWORD}
-                    </Label>
+                    <Label htmlFor={PASSWORD}>{PASSWORD}</Label>
                     <ValidationInput name={PASSWORD}>
                         <Input id={PASSWORD} type="password" name={PASSWORD} />
                     </ValidationInput>
@@ -63,8 +59,8 @@ storiesOf('Validation', module)
                 </DisabledOnErrors>
             </form>
         </Validation>
-    )
-    .add('custom validation rules', () =>
+    ))
+    .add('custom validation rules', () => (
         <Validation
             schema={customSchema}
             aliasedRules={aliasedRules}
@@ -73,17 +69,13 @@ storiesOf('Validation', module)
         >
             <form>
                 <Row>
-                    <Label htmlFor={LOGIN}>
-                        {LOGIN}
-                    </Label>
+                    <Label htmlFor={LOGIN}>{LOGIN}</Label>
                     <ValidationInput name={LOGIN}>
                         <Input id={LOGIN} type="text" name={LOGIN} />
                     </ValidationInput>
                 </Row>
                 <Row>
-                    <Label htmlFor={PASSWORD}>
-                        {PASSWORD}
-                    </Label>
+                    <Label htmlFor={PASSWORD}>{PASSWORD}</Label>
                     <ValidationInput name={PASSWORD}>
                         <Input id={PASSWORD} type="password" name={PASSWORD} />
                     </ValidationInput>
@@ -93,8 +85,8 @@ storiesOf('Validation', module)
                 </DisabledOnErrors>
             </form>
         </Validation>
-    )
-    .add('styled error block', () =>
+    ))
+    .add('styled error block', () => (
         <Validation
             schema={schema}
             data={{}}
@@ -106,17 +98,13 @@ storiesOf('Validation', module)
         >
             <form>
                 <Row>
-                    <Label htmlFor={LOGIN}>
-                        {LOGIN}
-                    </Label>
+                    <Label htmlFor={LOGIN}>{LOGIN}</Label>
                     <ValidationInput name={LOGIN}>
                         <Input id={LOGIN} type="text" name={LOGIN} />
                     </ValidationInput>
                 </Row>
                 <Row>
-                    <Label htmlFor={PASSWORD}>
-                        {PASSWORD}
-                    </Label>
+                    <Label htmlFor={PASSWORD}>{PASSWORD}</Label>
                     <ValidationInput name={PASSWORD}>
                         <Input id={PASSWORD} type="password" name={PASSWORD} />
                     </ValidationInput>
@@ -126,7 +114,7 @@ storiesOf('Validation', module)
                 </DisabledOnErrors>
             </form>
         </Validation>
-    );
+    ));
 
 const Input = styled.input`margin-top: 10px;`;
 

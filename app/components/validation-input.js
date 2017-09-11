@@ -70,7 +70,7 @@ class ValidationInput extends Component {
         return (
             <div>
                 {element}
-                {error &&
+                {error && (
                     <div
                         style={{
                             color: 'red',
@@ -81,7 +81,8 @@ class ValidationInput extends Component {
                         <div className={className} style={style}>
                             {errorCodes[error] || error}
                         </div>
-                    </div>}
+                    </div>
+                )}
             </div>
         );
     }
